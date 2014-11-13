@@ -335,13 +335,18 @@ for e in edge_set:
     #    t = distance / speed of light
     #    t (in ms) = ( distance in km * 1000 (for meters) ) / ( speed of light / 1000 (for ms))
 
-    #    ACTUAL CALCULATION: implementing this was no fun.
+    #    ACTUAL CALCULATION: implementing this was no fun.	
 
-    first_product               = math.sin(float(id_latitude_dict[dst_id])) * math.sin(float(id_latitude_dict[src_id]))
-    second_product_first_part   = math.cos(float(id_latitude_dict[dst_id])) * math.cos(float(id_latitude_dict[src_id]))
-    second_product_second_part  = math.cos((float(id_longitude_dict[dst_id])) - (float(id_longitude_dict[src_id])))
+    latitude_src	= math.radians(float(id_latitude_dict[src_id]))
+    latitude_dst	= math.radians(float(id_latitude_dict[dst_id]))
+    longitude_src	= math.radians(float(id_longitude_dict[src_id]))
+    longitude_dst	= math.radians(float(id_longitude_dict[dst_id]))
 
-    distance = math.radians(math.acos(first_product + (second_product_first_part * second_product_second_part))) * 6378.137
+    first_product               = math.sin(latitude_dst) * math.sin(latitude_src)
+    second_product_first_part   = math.cos(latitude_dst) * math.cos(latitude_src)
+    second_product_second_part  = math.cos(longitude_dst - longitude_src)
+
+    distance = math.acos(first_product + (second_product_first_part * second_product_second_part)) * 6378.137
 
     # t (in ms) = ( distance in km * 1000 (for meters) ) / ( speed of light / 1000 (for ms))
     # t         = ( distance       * 1000              ) / ( 1.97 * 10**8   / 1000         )
