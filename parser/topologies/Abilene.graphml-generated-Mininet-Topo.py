@@ -62,20 +62,20 @@ class GeneratedTopo( Topo ):
         self.addLink( Indianapolis , Indianapolis_host )
 
         # add edges between switches
-        self.addLink( NewYork , Chicago, bw=1, delay='0.806374975652ms')
-        self.addLink( NewYork , WashingtonDC, bw=1, delay='0.605826192092ms')
-        self.addLink( Chicago , Indianapolis, bw=1, delay='1.34462717203ms')
-        self.addLink( WashingtonDC , Atlanta, bw=1, delay='0.557636936322ms')
-        self.addLink( Seattle , Sunnyvale, bw=1, delay='1.28837123738ms')
-        self.addLink( Seattle , Denver, bw=1, delay='1.11169346865ms')
-        self.addLink( Sunnyvale , LosAngeles, bw=1, delay='0.590813628707ms')
-        self.addLink( Sunnyvale , Denver, bw=1, delay='0.997327682281ms')
-        self.addLink( LosAngeles , Houston, bw=1, delay='1.20160833263ms')
-        self.addLink( Denver , KansasCity, bw=1, delay='0.223328790403ms')
-        self.addLink( KansasCity , Houston, bw=1, delay='1.71325092726ms')
-        self.addLink( KansasCity , Indianapolis, bw=1, delay='0.240899959477ms')
-        self.addLink( Houston , Atlanta, bw=1, delay='1.34344500256ms')
-        self.addLink( Atlanta , Indianapolis, bw=1, delay='0.544962634977ms')
+        self.addLink( NewYork , Chicago, bw=10, delay='5.82294818601ms')
+        self.addLink( NewYork , WashingtonDC, bw=10, delay='1.66933354639ms')
+        self.addLink( Chicago , Indianapolis, bw=10, delay='1.33817152535ms')
+        self.addLink( WashingtonDC , Atlanta, bw=10, delay='4.43098085052ms')
+        self.addLink( Seattle , Sunnyvale, bw=10, delay='5.78617273178ms')
+        self.addLink( Seattle , Denver, bw=10, delay='8.33987030826ms')
+        self.addLink( Sunnyvale , LosAngeles, bw=10, delay='2.55695492867ms')
+        self.addLink( Sunnyvale , Denver, bw=10, delay='7.64100479966ms')
+        self.addLink( LosAngeles , Houston, bw=10, delay='11.2143737889ms')
+        self.addLink( Denver , KansasCity, bw=10, delay='4.53199947571ms')
+        self.addLink( KansasCity , Houston, bw=10, delay='5.29499644815ms')
+        self.addLink( KansasCity , Indianapolis, bw=10, delay='3.7130222434ms')
+        self.addLink( Houston , Atlanta, bw=10, delay='5.73005892826ms')
+        self.addLink( Atlanta , Indianapolis, bw=10, delay='3.49428237002ms')
 
 topos = { 'generated': ( lambda: GeneratedTopo() ) }
 
@@ -83,7 +83,7 @@ topos = { 'generated': ( lambda: GeneratedTopo() ) }
 
 # the following code produces an executable script working with a remote controller
 # and providing ssh access to the the mininet hosts from within the ubuntu vm
-controller_ip = '141.13.92.68'
+controller_ip = '10.0.3.11'
 
 def setupNetwork(controller_ip):
     "Create network and run simple performance test"
@@ -113,6 +113,9 @@ def connectToRootNS( network, switch, ip, prefixLen, routes ):
     for route in routes:
         root.cmd( 'route add -net ' + route + ' dev ' + str( intf ) )
 
+    # Run D-ITG logger on root
+    root.cmd('ITGLog &')
+
 def sshd( network, cmd='/usr/sbin/sshd', opts='-D' ):
     "Start a network, connect it to root ns, and run sshd on all hosts."
     switch = network.switches[ 0 ]  # switch to use
@@ -121,6 +124,7 @@ def sshd( network, cmd='/usr/sbin/sshd', opts='-D' ):
     connectToRootNS( network, switch, ip, 8, routes )
     for host in network.hosts:
         host.cmd( cmd + ' ' + opts + '&' )
+        host.cmd( 'ITGRecv -l /tmp/ITGRecv-' + host.IP() + '.log' + '&' )
 
     # DEBUGGING INFO
     print

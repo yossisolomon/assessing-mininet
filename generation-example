@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo mn -c
+python parser/GraphML-Topo-to-Mininet-Network-Generator.py -f parser/topologies/Abilene.graphml -c 10.0.3.11
+sudo python parser/topologies/Abilene.graphml-generated-Mininet-Topo.py 
+
