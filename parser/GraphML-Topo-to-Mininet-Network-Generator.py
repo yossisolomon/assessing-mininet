@@ -153,6 +153,9 @@ def connectToRootNS( network, switch, ip, prefixLen, routes ):
     for route in routes:
         root.cmd( 'route add -net ' + route + ' dev ' + str( intf ) )
 
+    # Run D-ITG logger on root
+    root.cmd('ITGLog &')
+
 def sshd( network, cmd='/usr/sbin/sshd', opts='-D' ):
     "Start a network, connect it to root ns, and run sshd on all hosts."
     switch = network.switches[ 0 ]  # switch to use
@@ -161,6 +164,7 @@ def sshd( network, cmd='/usr/sbin/sshd', opts='-D' ):
     connectToRootNS( network, switch, ip, 8, routes )
     for host in network.hosts:
         host.cmd( cmd + ' ' + opts + '&' )
+        host.cmd( 'ITGRecv -l /tmp/ITGRecv-' + host.IP() + '.log' + '&' )
 
     # DEBUGGING INFO
     print
