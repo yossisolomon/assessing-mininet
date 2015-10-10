@@ -124,7 +124,7 @@ def sshd( network, cmd='/usr/sbin/sshd', opts='-D' ):
     connectToRootNS( network, switch, ip, 8, routes )
     for host in network.hosts:
         host.cmd( cmd + ' ' + opts + '&' )
-        host.cmd( 'ITGRecv -l /tmp/ITGRecv-' + host.IP() + '.log' + '&' )
+        host.cmd( 'ITGRecv -l /tmp/ITGRecv-Logs/ITGRecv-' + host.IP() + '.log > /dev/null &' )
 
     # DEBUGGING INFO
     print

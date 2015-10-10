@@ -5,12 +5,15 @@
 # create working dir
 mkdir D-ITG
 cd D-ITG
+RELEASE_NAME=D-ITG-2.8.1-r1023-src.zip
 # get itg source for linux
-wget http://traffic.comics.unina.it/software/ITG/codice/D-ITG-2.8.0-rc1.tgz
+wget http://traffic.comics.unina.it/software/ITG/codice/$RELEASE_NAME
 # untar
-tar xf D-ITG-2.8.0-rc1.tgz
+#tar xf D-ITG-2.8.0-rc1.tgz
+# unzip
+unzip $RELEASE_NAME
 # cd
-cd D-ITG-2.8.0-rc1
+cd $RELEASE_NAME
 # next lines won't work since patch cannot be aplied anymore!
 # patch was for another revision of the version control and is out of sync now.
 # FOR THIS TO WORK, PLACE PATCH FILES IN ~/D-ITG-PATCH
